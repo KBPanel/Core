@@ -56,31 +56,6 @@ jobs:
           root: ~/project
           paths:
             - ./
-
-php80:
-    docker:
-      - image: circleci/php:8.0
-    steps:
-      - attach_workspace:
-          at: ~/project
-      - restore_cache:
-          keys:
-            - vendor-v1-php80-{{ checksum "composer.json" }}
-      - run:
-          name: Composer install
-          command: composer install --no-progress --no-interaction
-      - save_cache:
-          key: vendor-v1-php80-{{ checksum "composer.json" }}
-          paths:
-            - vendor
-            - composer.lock
-      - run:
-          name: Composer test
-          command: composer test -- --coverage-text
-      - persist_to_workspace:
-          root: ~/project
-          paths:
-            - ./
   
 workflows:
   version: 2
@@ -91,8 +66,5 @@ workflows:
           requires:
             - checkout
       - php74:
-          requires:
-            - checkout
-      - php80:
           requires:
             - checkout
