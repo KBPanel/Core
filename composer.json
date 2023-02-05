@@ -36,6 +36,25 @@
             "KSeven\\TelegramBot\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "KSeven\\TelegramBot\\Tests\\Unit\\": "tests/Unit"
+        }
+    },
+    "scripts": {
+        "check-code": [
+            "\"vendor/bin/phpcs\""
+        ],
+        "test": [
+            "\"vendor/bin/phpunit\""
+        ],
+        "test-cov": [
+            "\"vendor/bin/phpunit\" --coverage-clover clover.xml"
+        ],
+        "test-cov-upload": [
+            "wget https://scrutinizer-ci.com/ocular.phar && php ocular.phar code-coverage:upload --format=php-clover clover.xml"
+        ]
+    },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
