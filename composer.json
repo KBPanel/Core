@@ -36,11 +36,6 @@
             "KSeven\\TelegramBot\\": "src"
         }
     },
-    "autoload-dev": {
-        "psr-4": {
-            "KSeven\\TelegramBot\\Tests\\Unit\\": "tests/Unit"
-        }
-    },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
