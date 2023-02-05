@@ -57,7 +57,7 @@ jobs:
           paths:
             - ./
 
-php8:
+php80:
     docker:
       - image: circleci/php:8.0
     steps:
@@ -93,6 +93,6 @@ workflows:
       - php74:
           requires:
             - checkout
-      - php8:
+      - php80:
           requires:
             - checkout
