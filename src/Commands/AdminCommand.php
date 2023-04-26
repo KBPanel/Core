@@ -1,17 +1,11 @@
 <?php
 
+namespace PHPBotts\Core\Commands;
+
+abstract class AdminCommand extends Command
+{
     /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
+     * @var bool
      */
-
-    namespace KSeven\TelegramBot\Commands;
-
-    abstract class AdminCommand extends Command
-    {
-        /**
-         * @var bool
-         */
-        protected $private_only = true;
-    }
+    protected $private_only = true;
+}

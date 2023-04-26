@@ -1,32 +1,26 @@
 <?php
 
-    /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
-     */
+namespace PHPBotts\Core\Entities;
 
-    namespace KSeven\TelegramBot\Entities;
-
+/**
+ * Class ReplyToMessage
+ *
+ * @todo Is this even required?!
+ */
+class ReplyToMessage extends Message
+{
     /**
-     * Class ReplyToMessage
+     * ReplyToMessage constructor.
      *
-     * @todo Is this even required?!
+     * @param array  $data
+     * @param string $bot_username
      */
-    class ReplyToMessage extends Message
+    public function __construct(array $data, string $bot_username = '')
     {
-        /**
-         * ReplyToMessage constructor.
-         *
-         * @param array  $data
-         * @param string $bot_username
-         */
-        public function __construct(array $data, string $bot_username = '')
-        {
-            //As explained in the documentation
-            //Reply to message can't contain other reply to message entities
-            unset($data['reply_to_message']);
+        //As explained in the documentation
+        //Reply to message can't contain other reply to message entities
+        unset($data['reply_to_message']);
 
-            parent::__construct($data, $bot_username);
-        }
+        parent::__construct($data, $bot_username);
     }
+}

@@ -1,13 +1,13 @@
 {
-    "name": "kseven/telegram-bot",
+    "name": "phpbotts/core",
     "type": "library",
     "description": "Bot Para Telegram Em PHP",
     "keywords": ["telegram", "bot", "api"],
     "license": "MIT",
-    "homepage": "https://github.com/k7brasil/TelegramBotCore",
+    "homepage": "https://github.com/PHPBotts/Core",
     "support": {
-        "issues": "https://github.com/k7brasil/TelegramBotCore/issues",
-        "source": "https://github.com/k7brasil/TelegramBotCore"
+        "issues": "https://github.com/PHPBotts/Core/issues",
+        "source": "https://github.com/PHPBotts/Core"
     },
     "authors": [
         {
@@ -33,12 +33,12 @@
     },
     "autoload": {
         "psr-4": {
-            "KSeven\\TelegramBot\\": "src"
+            "PHPBotts\\Core\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "KSeven\\TelegramBot\\Tests\\Unit\\": "tests/Unit"
+            "PHPBotts\\Core\\Tests\\Unit\\": "tests/Unit"
         }
     },
     "scripts": {

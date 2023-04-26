@@ -1,32 +1,26 @@
 <?php
 
+namespace PHPBotts\Core\Commands\SystemCommands;
+
+use PHPBotts\Core\Commands\SystemCommand;
+
+/**
+ * Generic command
+ */
+class GenericCommand extends SystemCommand
+{
     /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
+     * @var string
      */
-
-    namespace KSeven\TelegramBot\Commands\SystemCommands;
-
-    use KSeven\TelegramBot\Commands\SystemCommand;
+    protected $name = 'generic';
 
     /**
-     * Generic command
+     * @var string
      */
-    class GenericCommand extends SystemCommand
-    {
-        /**
-         * @var string
-         */
-        protected $name = 'generic';
+    protected $description = 'Handles generic commands or is executed by default when a command is not found';
 
-        /**
-         * @var string
-         */
-        protected $description = 'Handles generic commands or is executed by default when a command is not found';
-
-        /**
-         * @var string
-         */
-        protected $version = '1.1.0';
-    }
+    /**
+     * @var string
+     */
+    protected $version = '1.1.0';
+}

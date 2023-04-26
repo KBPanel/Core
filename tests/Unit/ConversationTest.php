@@ -1,16 +1,10 @@
 <?php
 
-    /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
-     */
+    namespace PHPBotts\Core\Tests\Unit;
 
-    namespace KSeven\TelegramBot\Tests\Unit;
-
-    use KSeven\TelegramBot\Conversation;
-    use KSeven\TelegramBot\Exception\TelegramException;
-    use KSeven\TelegramBot\Telegram;
+    use PHPBotts\Core\Conversation;
+    use PHPBotts\Core\Exception\TelegramException;
+    use PHPBotts\Core\Telegram;
 
     class ConversationTest extends TestCase
     {

@@ -1,53 +1,47 @@
 <?php
 
+namespace PHPBotts\Core\Commands\UserCommands;
+
+use PHPBotts\Core\Commands\UserCommand;
+use PHPBotts\Core\Entities\ServerResponse;
+use PHPBotts\Core\Request;
+
+/**
+ * Start command
+ */
+class StartCommand extends UserCommand
+{
     /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
+     * @var string
      */
-
-    namespace KSeven\TelegramBot\Commands\UserCommands;
-
-    use KSeven\TelegramBot\Commands\UserCommand;
-    use KSeven\TelegramBot\Entities\ServerResponse;
-    use KSeven\TelegramBot\Request;
+    protected $name = 'start';
 
     /**
-     * Start command
+     * @var string
      */
-    class StartCommand extends UserCommand
+    protected $description = 'Start command';
+
+    /**
+     * @var string
+     */
+    protected $usage = '/start';
+
+    /**
+     * @var string
+     */
+    protected $version = '1.2.0';
+
+    /**
+     * Command execute method
+     *
+     * @return ServerResponse
+     */
+    public function execute(): ServerResponse
     {
-        /**
-         * @var string
-         */
-        protected $name = 'start';
+        //$message = $this->getMessage();
+        //$chat_id = $message->getChat()->getId();
+        //$user_id = $message->getFrom()->getId();
 
-        /**
-         * @var string
-         */
-        protected $description = 'Start command';
-
-        /**
-         * @var string
-         */
-        protected $usage = '/start';
-
-        /**
-         * @var string
-         */
-        protected $version = '1.2.0';
-
-        /**
-         * Command execute method
-         *
-         * @return ServerResponse
-         */
-        public function execute(): ServerResponse
-        {
-            //$message = $this->getMessage();
-            //$chat_id = $message->getChat()->getId();
-            //$user_id = $message->getFrom()->getId();
-
-            return Request::emptyResponse();
-        }
+        return Request::emptyResponse();
     }
+}

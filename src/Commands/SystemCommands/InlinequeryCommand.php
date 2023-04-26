@@ -1,47 +1,41 @@
 <?php
 
+namespace PHPBotts\Core\Commands\SystemCommands;
+
+use PHPBotts\Core\Commands\SystemCommand;
+use PHPBotts\Core\Entities\ServerResponse;
+
+/**
+ * Inline query command
+ */
+class InlinequeryCommand extends SystemCommand
+{
     /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
+     * @var string
      */
-
-    namespace KSeven\TelegramBot\Commands\SystemCommands;
-
-    use KSeven\TelegramBot\Commands\SystemCommand;
-    use KSeven\TelegramBot\Entities\ServerResponse;
+    protected $name = 'inlinequery';
 
     /**
-     * Inline query command
+     * @var string
      */
-    class InlinequeryCommand extends SystemCommand
+    protected $description = 'Reply to inline query';
+
+    /**
+     * @var string
+     */
+    protected $version = '1.0.1';
+
+    /**
+     * Command execute method
+     *
+     * @return mixed
+     */
+    public function execute(): ServerResponse
     {
-        /**
-         * @var string
-         */
-        protected $name = 'inlinequery';
+        //$inline_query = $this->getInlineQuery();
+        //$user_id      = $inline_query->getFrom()->getId();
+        //$query        = $inline_query->getQuery();
 
-        /**
-         * @var string
-         */
-        protected $description = 'Reply to inline query';
-
-        /**
-         * @var string
-         */
-        protected $version = '1.0.1';
-
-        /**
-         * Command execute method
-         *
-         * @return mixed
-         */
-        public function execute(): ServerResponse
-        {
-            //$inline_query = $this->getInlineQuery();
-            //$user_id      = $inline_query->getFrom()->getId();
-            //$query        = $inline_query->getQuery();
-
-            return $this->getInlineQuery()->answer([]);
-        }
+        return $this->getInlineQuery()->answer([]);
     }
+}

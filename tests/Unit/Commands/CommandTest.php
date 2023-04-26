@@ -1,17 +1,11 @@
 <?php
 
-    /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
-     */
+    namespace PHPBotts\Core\Tests\Unit\Commands;
 
-    namespace KSeven\TelegramBot\Tests\Unit\Commands;
-
-    use KSeven\TelegramBot\Commands\Command;
-    use KSeven\TelegramBot\Telegram;
-    use KSeven\TelegramBot\Tests\Unit\TestCase;
-    use KSeven\TelegramBot\Tests\Unit\TestHelpers;
+    use PHPBotts\Core\Commands\Command;
+    use PHPBotts\Core\Telegram;
+    use PHPBotts\Core\Tests\Unit\TestCase;
+    use PHPBotts\Core\Tests\Unit\TestHelpers;
 
     class CommandTest extends TestCase
     {

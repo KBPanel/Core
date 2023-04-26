@@ -1,22 +1,16 @@
 <?php
 
-    /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
-     */
-
-    namespace KSeven\TelegramBot\Tests\Unit;
+    namespace PHPBotts\Core\Tests\Unit;
 
     use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
     use Dummy\AdminCommands\DummyAdminCommand;
     use Dummy\SystemCommands\DummySystemCommand;
     use Dummy\UserCommands\DummyUserCommand;
-    use KSeven\TelegramBot\Commands\UserCommands\StartCommand;
-    use KSeven\TelegramBot\Entities\Update;
-    use KSeven\TelegramBot\Exception\TelegramException;
-    use KSeven\TelegramBot\Telegram;
-    use KSeven\TelegramBot\TelegramLog;
+    use PHPBotts\Core\Commands\UserCommands\StartCommand;
+    use PHPBotts\Core\Entities\Update;
+    use PHPBotts\Core\Exception\TelegramException;
+    use PHPBotts\Core\Telegram;
+    use PHPBotts\Core\TelegramLog;
 
     class TelegramTest extends TestCase
     {

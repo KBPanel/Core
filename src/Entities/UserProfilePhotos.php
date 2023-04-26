@@ -1,51 +1,45 @@
 <?php
 
-    /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
-     */
+namespace PHPBotts\Core\Entities;
 
-    namespace KSeven\TelegramBot\Entities;
-
+/**
+ * Class UserProfilePhotos
+ *
+ * @link https://core.telegram.org/bots/api#userprofilephotos
+ *
+ * @method int getTotalCount() Total number of profile pictures the target user has
+ */
+class UserProfilePhotos extends Entity
+{
     /**
-     * Class UserProfilePhotos
-     *
-     * @link https://core.telegram.org/bots/api#userprofilephotos
-     *
-     * @method int getTotalCount() Total number of profile pictures the target user has
+     * {@inheritdoc}
      */
-    class UserProfilePhotos extends Entity
+    protected function subEntities(): array
     {
-        /**
-         * {@inheritdoc}
-         */
-        protected function subEntities(): array
-        {
-            return [
-                'photos' => PhotoSize::class,
-            ];
-        }
-
-        /**
-         * Requested profile pictures (in up to 4 sizes each)
-         *
-         * This method overrides the default getPhotos method and returns a nice array
-         *
-         * @return PhotoSize[][]
-         */
-        public function getPhotos(): array
-        {
-            $all_photos = [];
-
-            if ($these_photos = $this->getProperty('photos')) {
-                foreach ($these_photos as $photos) {
-                    $all_photos[] = array_map(function ($photo) {
-                        return new PhotoSize($photo);
-                    }, $photos);
-                }
-            }
-
-            return $all_photos;
-        }
+        return [
+            'photos' => PhotoSize::class,
+        ];
     }
+
+    /**
+     * Requested profile pictures (in up to 4 sizes each)
+     *
+     * This method overrides the default getPhotos method and returns a nice array
+     *
+     * @return PhotoSize[][]
+     */
+    public function getPhotos(): array
+    {
+        $all_photos = [];
+
+        if ($these_photos = $this->getProperty('photos')) {
+            foreach ($these_photos as $photos) {
+                $all_photos[] = array_map(function ($photo) {
+                    return new PhotoSize($photo);
+                }, $photos);
+            }
+        }
+
+        return $all_photos;
+    }
+}

@@ -1,35 +1,29 @@
 <?php
 
+namespace PHPBotts\Core\Entities\TelegramPassport;
+
+use PHPBotts\Core\Entities\Entity;
+
+/**
+ * Class PassportData
+ *
+ * Contains information about Telegram Passport data shared with the bot by the user.
+ *
+ * @link https://core.telegram.org/bots/api#passportdata
+ *
+ * @method EncryptedPassportElement[] getData()        Array with information about documents and other Telegram Passport elements that was shared with the bot
+ * @method EncryptedCredentials       getCredentials() Encrypted credentials required to decrypt the data
+ **/
+class PassportData extends Entity
+{
     /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
+     * {@inheritdoc}
      */
-
-    namespace KSeven\TelegramBot\Entities\TelegramPassport;
-
-    use KSeven\TelegramBot\Entities\Entity;
-
-    /**
-     * Class PassportData
-     *
-     * Contains information about Telegram Passport data shared with the bot by the user.
-     *
-     * @link https://core.telegram.org/bots/api#passportdata
-     *
-     * @method EncryptedPassportElement[] getData()        Array with information about documents and other Telegram Passport elements that was shared with the bot
-     * @method EncryptedCredentials       getCredentials() Encrypted credentials required to decrypt the data
-     **/
-    class PassportData extends Entity
+    protected function subEntities(): array
     {
-        /**
-         * {@inheritdoc}
-         */
-        protected function subEntities(): array
-        {
-            return [
-                'data'        => [EncryptedPassportElement::class],
-                'credentials' => EncryptedCredentials::class,
-            ];
-        }
+        return [
+            'data'        => [EncryptedPassportElement::class],
+            'credentials' => EncryptedCredentials::class,
+        ];
     }
+}

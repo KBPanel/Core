@@ -1,20 +1,13 @@
 <?php
-
-    /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
-     */
-
     /**
      * Test "/dummyuser" command
      */
     
     namespace Dummy\UserCommands;
 
-    use KSeven\TelegramBot\Commands\UserCommand;
-    use KSeven\TelegramBot\Entities\ServerResponse;
-    use KSeven\TelegramBot\Request;
+    use PHPBotts\Core\Commands\UserCommand;
+    use PHPBotts\Core\Entities\ServerResponse;
+    use PHPBotts\Core\Request;
 
     class DummyUserCommand extends UserCommand
     {

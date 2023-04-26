@@ -1,14 +1,8 @@
 <?php
 
-    /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
-     */
+    namespace PHPBotts\Core\Tests\Unit;
 
-    namespace KSeven\TelegramBot\Tests\Unit;
-
-    use KSeven\TelegramBot\TelegramLog;
+    use PHPBotts\Core\TelegramLog;
     use Monolog\Formatter\LineFormatter;
     use Monolog\Handler\StreamHandler;
     use Monolog\Logger;

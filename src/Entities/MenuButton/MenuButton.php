@@ -1,21 +1,15 @@
 <?php
 
-    /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
-     */
+namespace PHPBotts\Core\Entities\MenuButton;
 
-    namespace KSeven\TelegramBot\Entities\MenuButton;
+use PHPBotts\Core\Entities\Entity;
 
-    use KSeven\TelegramBot\Entities\Entity;
+/**
+ * @method string getType() Type of the button
+ *
+ * @method $this setType($type) Type of the button
+ */
+abstract class MenuButton extends Entity
+{
 
-    /**
-     * @method string getType() Type of the button
-     *
-     * @method $this setType($type) Type of the button
-     */
-    abstract class MenuButton extends Entity
-    {
-
-    }
+}

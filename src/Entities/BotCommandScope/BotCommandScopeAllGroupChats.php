@@ -1,25 +1,19 @@
 <?php
 
-    /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
-     */
+namespace PHPBotts\Core\Entities\BotCommandScope;
 
-    namespace KSeven\TelegramBot\Entities\BotCommandScope;
+use PHPBotts\Core\Entities\Entity;
 
-    use KSeven\TelegramBot\Entities\Entity;
-
-    /**
-     * Class BotCommandScopeAllGroupChats
-     *
-     * @link https://core.telegram.org/bots/api#botcommandscopeallgroupchats
-     */
-    class BotCommandScopeAllGroupChats extends Entity implements BotCommandScope
+/**
+ * Class BotCommandScopeAllGroupChats
+ *
+ * @link https://core.telegram.org/bots/api#botcommandscopeallgroupchats
+ */
+class BotCommandScopeAllGroupChats extends Entity implements BotCommandScope
+{
+    public function __construct(array $data = [])
     {
-        public function __construct(array $data = [])
-        {
-            $data['type'] = 'all_group_chats';
-            parent::__construct($data);
-        }
+        $data['type'] = 'all_group_chats';
+        parent::__construct($data);
     }
+}

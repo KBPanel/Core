@@ -1,43 +1,37 @@
 <?php
 
+namespace PHPBotts\Core\Entities\Games;
+
+use PHPBotts\Core\Entities\Animation;
+use PHPBotts\Core\Entities\Entity;
+use PHPBotts\Core\Entities\MessageEntity;
+use PHPBotts\Core\Entities\PhotoSize;
+
+/**
+ * Class Game
+ *
+ * This object represents a game. Use BotFather to create and edit games, their short names will act as unique identifiers.
+ *
+ * @link https://core.telegram.org/bots/api#game
+ *
+ * @method string          getTitle()        Title of the game
+ * @method string          getDescription()  Description of the game
+ * @method PhotoSize[]     getPhoto()        Photo that will be displayed in the game message in chats.
+ * @method string          getText()         Optional. Brief description of the game or high scores included in the game message. Can be automatically edited to include current high scores for the game when the bot calls setGameScore, or manually edited using editMessageText. 0-4096 characters.
+ * @method MessageEntity[] getTextEntities() Optional. Special entities that appear in text, such as usernames, URLs, bot commands, etc.
+ * @method Animation       getAnimation()    Optional. Animation that will be displayed in the game message in chats. Upload via BotFather
+ **/
+class Game extends Entity
+{
     /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
+     * {@inheritdoc}
      */
-
-    namespace KSeven\TelegramBot\Entities\Games;
-
-    use KSeven\TelegramBot\Entities\Animation;
-    use KSeven\TelegramBot\Entities\Entity;
-    use KSeven\TelegramBot\Entities\MessageEntity;
-    use KSeven\TelegramBot\Entities\PhotoSize;
-
-    /**
-     * Class Game
-     *
-     * This object represents a game. Use BotFather to create and edit games, their short names will act as unique identifiers.
-     *
-     * @link https://core.telegram.org/bots/api#game
-     *
-     * @method string          getTitle()        Title of the game
-     * @method string          getDescription()  Description of the game
-     * @method PhotoSize[]     getPhoto()        Photo that will be displayed in the game message in chats.
-     * @method string          getText()         Optional. Brief description of the game or high scores included in the game message. Can be automatically edited to include current high scores for the game when the bot calls setGameScore, or manually edited using editMessageText. 0-4096 characters.
-     * @method MessageEntity[] getTextEntities() Optional. Special entities that appear in text, such as usernames, URLs, bot commands, etc.
-     * @method Animation       getAnimation()    Optional. Animation that will be displayed in the game message in chats. Upload via BotFather
-     **/
-    class Game extends Entity
+    protected function subEntities(): array
     {
-        /**
-         * {@inheritdoc}
-         */
-        protected function subEntities(): array
-        {
-            return [
-                'photo'         => [PhotoSize::class],
-                'text_entities' => [MessageEntity::class],
-                'animation'     => Animation::class,
-            ];
-        }
+        return [
+            'photo'         => [PhotoSize::class],
+            'text_entities' => [MessageEntity::class],
+            'animation'     => Animation::class,
+        ];
     }
+}

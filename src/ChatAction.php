@@ -1,67 +1,61 @@
 <?php
 
+namespace PHPBotts\Core;
+
+class ChatAction
+{
     /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
+     * Typing chat action
      */
+    public const TYPING = 'typing';
 
-    namespace KSeven\TelegramBot;
+    /**
+     * Upload Photo chat action
+     */
+    public const UPLOAD_PHOTO = 'upload_photo';
 
-    class ChatAction
-    {
-        /**
-         * Typing chat action
-         */
-        public const TYPING = 'typing';
+    /**
+     * Record Video chat action
+     */
+    public const RECORD_VIDEO = 'record_video';
 
-        /**
-         * Upload Photo chat action
-         */
-        public const UPLOAD_PHOTO = 'upload_photo';
+    /**
+     * Upload Video chat action
+     */
+    public const UPLOAD_VIDEO = 'upload_video';
 
-        /**
-         * Record Video chat action
-         */
-        public const RECORD_VIDEO = 'record_video';
+    /**
+     * Record Voice chat action
+     */
+    public const RECORD_VOICE = 'record_voice';
 
-        /**
-         * Upload Video chat action
-         */
-        public const UPLOAD_VIDEO = 'upload_video';
+    /**
+     * Upload Voice chat action
+     */
+    public const UPLOAD_VOICE = 'upload_voice';
 
-        /**
-         * Record Voice chat action
-         */
-        public const RECORD_VOICE = 'record_voice';
+    /**
+     * Upload Document chat action
+     */
+    public const UPLOAD_DOCUMENT = 'upload_document';
 
-        /**
-         * Upload Voice chat action
-         */
-        public const UPLOAD_VOICE = 'upload_voice';
+    /**
+     * Choose Sticker chat action
+     */
+    public const CHOOSE_STICKER = 'choose_sticker';
 
-        /**
-         * Upload Document chat action
-         */
-        public const UPLOAD_DOCUMENT = 'upload_document';
+    /**
+     * Find Location chat action
+     */
+    public const FIND_LOCATION = 'find_location';
 
-        /**
-         * Choose Sticker chat action
-         */
-        public const CHOOSE_STICKER = 'choose_sticker';
+    /**
+     * Record Video Note chat action
+     */
+    public const RECORD_VIDEO_NOTE = 'record_video_note';
 
-        /**
-         * Find Location chat action
-         */
-        public const FIND_LOCATION = 'find_location';
-
-        /**
-         * Record Video Note chat action
-         */
-        public const RECORD_VIDEO_NOTE = 'record_video_note';
-
-        /**
-         * Upload Video note chat action
-         */
-        public const UPLOAD_VIDEO_NOTE = 'upload_video_note';
-    }
+    /**
+     * Upload Video note chat action
+     */
+    public const UPLOAD_VIDEO_NOTE = 'upload_video_note';
+}

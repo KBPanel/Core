@@ -1,14 +1,8 @@
 <?php
 
-    /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
-     */
+namespace PHPBotts\Core\Entities\InlineQuery;
 
-    namespace KSeven\TelegramBot\Entities\InlineQuery;
+interface InlineQueryResult
+{
 
-    interface InlineQueryResult
-    {
-
-    }
+}

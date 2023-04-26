@@ -1,33 +1,27 @@
 <?php
 
-    /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
-     */
+namespace PHPBotts\Core\Entities;
 
-    namespace KSeven\TelegramBot\Entities;
-
+/**
+ * Class PollAnswer
+ *
+ * This entity represents an answer of a user in a non-anonymous poll.
+ *
+ * @link https://core.telegram.org/bots/api#pollanswer
+ *
+ * @method string getPollId()    Unique poll identifier
+ * @method User   getUser()      The user, who changed the answer to the poll
+ * @method array  getOptionIds() 0-based identifiers of answer options, chosen by the user. May be empty if the user retracted their vote.
+ */
+class PollAnswer extends Entity
+{
     /**
-     * Class PollAnswer
-     *
-     * This entity represents an answer of a user in a non-anonymous poll.
-     *
-     * @link https://core.telegram.org/bots/api#pollanswer
-     *
-     * @method string getPollId()    Unique poll identifier
-     * @method User   getUser()      The user, who changed the answer to the poll
-     * @method array  getOptionIds() 0-based identifiers of answer options, chosen by the user. May be empty if the user retracted their vote.
+     * {@inheritdoc}
      */
-    class PollAnswer extends Entity
+    protected function subEntities(): array
     {
-        /**
-         * {@inheritdoc}
-         */
-        protected function subEntities(): array
-        {
-            return [
-                'user' => User::class,
-            ];
-        }
+        return [
+            'user' => User::class,
+        ];
     }
+}

@@ -1,25 +1,19 @@
 <?php
 
-    /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
-     */
+namespace PHPBotts\Core\Entities;
 
-    namespace KSeven\TelegramBot\Entities;
+/**
+ * Class WebAppInfo
+ *
+ * @link https://core.telegram.org/bots/api#webappinfo
+ *
+ * @property string $url An HTTPS URL of a Web App to be opened with additional data as specified in Initializing Web Apps
+ *
+ * @method string getUrl() An HTTPS URL of a Web App to be opened with additional data as specified in Initializing Web Apps
+ *
+ * @method $this setUrl(string $url) An HTTPS URL of a Web App to be opened with additional data as specified in Initializing Web Apps
+ */
+class WebAppInfo extends Entity
+{
 
-    /**
-     * Class WebAppInfo
-     *
-     * @link https://core.telegram.org/bots/api#webappinfo
-     *
-     * @property string $url An HTTPS URL of a Web App to be opened with additional data as specified in Initializing Web Apps
-     *
-     * @method string getUrl() An HTTPS URL of a Web App to be opened with additional data as specified in Initializing Web Apps
-     *
-     * @method $this setUrl(string $url) An HTTPS URL of a Web App to be opened with additional data as specified in Initializing Web Apps
-     */
-    class WebAppInfo extends Entity
-    {
-
-    }
+}

@@ -1,17 +1,11 @@
 <?php
 
-    /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
-     */
+    namespace PHPBotts\Core\Tests\Unit\Entities;
 
-    namespace KSeven\TelegramBot\Tests\Unit\Entities;
-
-    use KSeven\TelegramBot\Entities\InlineKeyboard;
-    use KSeven\TelegramBot\Entities\InlineKeyboardButton;
-    use KSeven\TelegramBot\Exception\TelegramException;
-    use KSeven\TelegramBot\Tests\Unit\TestCase;
+    use PHPBotts\Core\Entities\InlineKeyboard;
+    use PHPBotts\Core\Entities\InlineKeyboardButton;
+    use PHPBotts\Core\Exception\TelegramException;
+    use PHPBotts\Core\Tests\Unit\TestCase;
 
     class InlineKeyboardTest extends TestCase
     {

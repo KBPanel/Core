@@ -1,376 +1,370 @@
 <?php
 
+namespace PHPBotts\Core\Commands\AdminCommands;
+
+use PHPBotts\Core\Commands\AdminCommand;
+use PHPBotts\Core\Conversation;
+use PHPBotts\Core\Entities\Chat;
+use PHPBotts\Core\Entities\Entity;
+use PHPBotts\Core\Entities\Keyboard;
+use PHPBotts\Core\Entities\Message;
+use PHPBotts\Core\Entities\ServerResponse;
+use PHPBotts\Core\Exception\TelegramException;
+use PHPBotts\Core\Request;
+
+class SendtochannelCommand extends AdminCommand
+{
     /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
+     * @var string
      */
+    protected $name = 'sendtochannel';
 
-    namespace KSeven\TelegramBot\Commands\AdminCommands;
+    /**
+     * @var string
+     */
+    protected $description = 'Send message to a channel';
 
-    use KSeven\TelegramBot\Commands\AdminCommand;
-    use KSeven\TelegramBot\Conversation;
-    use KSeven\TelegramBot\Entities\Chat;
-    use KSeven\TelegramBot\Entities\Entity;
-    use KSeven\TelegramBot\Entities\Keyboard;
-    use KSeven\TelegramBot\Entities\Message;
-    use KSeven\TelegramBot\Entities\ServerResponse;
-    use KSeven\TelegramBot\Exception\TelegramException;
-    use KSeven\TelegramBot\Request;
+    /**
+     * @var string
+     */
+    protected $usage = '/sendtochannel <message to send>';
 
-    class SendtochannelCommand extends AdminCommand
+    /**
+     * @var string
+     */
+    protected $version = '0.3.0';
+
+    /**
+     * @var bool
+     */
+    protected $need_mysql = true;
+
+    /**
+     * Conversation Object
+     *
+     * @var Conversation
+     */
+    protected $conversation;
+
+    /**
+     * Command execute method
+     *
+     * @return ServerResponse|mixed
+     * @throws TelegramException
+     */
+    public function execute(): ServerResponse
     {
-        /**
-         * @var string
-         */
-        protected $name = 'sendtochannel';
+        $message = $this->getMessage();
+        $chat_id = $message->getChat()->getId();
+        $user_id = $message->getFrom()->getId();
 
-        /**
-         * @var string
-         */
-        protected $description = 'Send message to a channel';
+        $type = $message->getType();
+        // 'Cast' the command type to message to protect the machine state
+        // if the command is recalled when the conversation is already started
+        in_array($type, ['command', 'text'], true) && $type = 'message';
 
-        /**
-         * @var string
-         */
-        protected $usage = '/sendtochannel <message to send>';
+        $text           = trim($message->getText(true));
+        $text_yes_or_no = ($text === 'Yes' || $text === 'No');
 
-        /**
-         * @var string
-         */
-        protected $version = '0.3.0';
+        $data = [
+            'chat_id' => $chat_id,
+        ];
 
-        /**
-         * @var bool
-         */
-        protected $need_mysql = true;
+        // Conversation
+        $this->conversation = new Conversation($user_id, $chat_id, $this->getName());
 
-        /**
-         * Conversation Object
-         *
-         * @var Conversation
-         */
-        protected $conversation;
+        $notes = &$this->conversation->notes;
+        !is_array($notes) && $notes = [];
 
-        /**
-         * Command execute method
-         *
-         * @return ServerResponse|mixed
-         * @throws TelegramException
-         */
-        public function execute(): ServerResponse
-        {
-            $message = $this->getMessage();
-            $chat_id = $message->getChat()->getId();
-            $user_id = $message->getFrom()->getId();
+        $channels = (array) $this->getConfig('your_channel');
+        if (isset($notes['state'])) {
+            $state = $notes['state'];
+        } else {
+            $state                    = (count($channels) === 0) ? -1 : 0;
+            $notes['last_message_id'] = $message->getMessageId();
+        }
 
-            $type = $message->getType();
-            // 'Cast' the command type to message to protect the machine state
-            // if the command is recalled when the conversation is already started
-            in_array($type, ['command', 'text'], true) && $type = 'message';
+        $yes_no_keyboard = new Keyboard(
+            [
+                'keyboard'          => [['Yes', 'No']],
+                'resize_keyboard'   => true,
+                'one_time_keyboard' => true,
+                'selective'         => true,
+            ]
+        );
 
-            $text           = trim($message->getText(true));
-            $text_yes_or_no = ($text === 'Yes' || $text === 'No');
+        switch ($state) {
+            case -1:
+                // getConfig has not been configured asking for channel to administer
+                if ($type !== 'message' || $text === '') {
+                    $notes['state'] = -1;
+                    $this->conversation->update();
 
-            $data = [
-                'chat_id' => $chat_id,
-            ];
+                    $result = $this->replyToChat(
+                        'Insert the channel name or ID (_@yourchannel_ or _-12345_)',
+                        [
+                            'parse_mode'   => 'markdown',
+                            'reply_markup' => Keyboard::remove(['selective' => true]),
+                        ]
+                    );
 
-            // Conversation
-            $this->conversation = new Conversation($user_id, $chat_id, $this->getName());
-
-            $notes = &$this->conversation->notes;
-            !is_array($notes) && $notes = [];
-
-            $channels = (array) $this->getConfig('your_channel');
-            if (isset($notes['state'])) {
-                $state = $notes['state'];
-            } else {
-                $state                    = (count($channels) === 0) ? -1 : 0;
+                    break;
+                }
+                $notes['channel']         = $text;
                 $notes['last_message_id'] = $message->getMessageId();
-            }
+                // Jump to state 1
+                goto insert;
 
-            $yes_no_keyboard = new Keyboard(
-                [
-                    'keyboard'          => [['Yes', 'No']],
-                    'resize_keyboard'   => true,
-                    'one_time_keyboard' => true,
-                    'selective'         => true,
-                ]
-            );
+            // no break
+            default:
+            case 0:
+                // getConfig has been configured choose channel
+                if ($type !== 'message' || $text === '') {
+                    $notes['state'] = 0;
+                    $this->conversation->update();
 
-            switch ($state) {
-                case -1:
-                    // getConfig has not been configured asking for channel to administer
-                    if ($type !== 'message' || $text === '') {
-                        $notes['state'] = -1;
-                        $this->conversation->update();
+                    $keyboard = array_map(function ($channel) {
+                        return [$channel];
+                    }, $channels);
 
-                        $result = $this->replyToChat(
-                            'Insert the channel name or ID (_@yourchannel_ or _-12345_)',
-                            [
-                                'parse_mode'   => 'markdown',
-                                'reply_markup' => Keyboard::remove(['selective' => true]),
-                            ]
-                        );
+                    $result = $this->replyToChat(
+                        'Choose a channel from the keyboard' . PHP_EOL .
+                        '_or_ insert the channel name or ID (_@yourchannel_ or _-12345_)',
+                        [
+                            'parse_mode'   => 'markdown',
+                            'reply_markup' => new Keyboard(
+                                [
+                                    'keyboard'          => $keyboard,
+                                    'resize_keyboard'   => true,
+                                    'one_time_keyboard' => true,
+                                    'selective'         => true,
+                                ]
+                            ),
+                        ]
+                    );
+                    break;
+                }
+                $notes['channel']         = $text;
+                $notes['last_message_id'] = $message->getMessageId();
 
-                        break;
-                    }
-                    $notes['channel']         = $text;
-                    $notes['last_message_id'] = $message->getMessageId();
-                    // Jump to state 1
-                    goto insert;
+            // no break
+            case 1:
+                insert:
+                if (($type === 'message' && $text === '') || $notes['last_message_id'] === $message->getMessageId()) {
+                    $notes['state'] = 1;
+                    $this->conversation->update();
 
-                // no break
-                default:
-                case 0:
-                    // getConfig has been configured choose channel
-                    if ($type !== 'message' || $text === '') {
-                        $notes['state'] = 0;
-                        $this->conversation->update();
+                    $result = $this->replyToChat(
+                        'Insert the content you want to share: text, photo, audio...',
+                        ['reply_markup' => Keyboard::remove(['selective' => true])]
+                    );
+                    break;
+                }
+                $notes['last_message_id'] = $message->getMessageId();
+                $notes['message']         = $message->getRawData();
+                $notes['message_type']    = $type;
+            // no break
+            case 2:
+                if (!$text_yes_or_no || $notes['last_message_id'] === $message->getMessageId()) {
+                    $notes['state'] = 2;
+                    $this->conversation->update();
 
-                        $keyboard = array_map(function ($channel) {
-                            return [$channel];
-                        }, $channels);
-
-                        $result = $this->replyToChat(
-                            'Choose a channel from the keyboard' . PHP_EOL .
-                            '_or_ insert the channel name or ID (_@yourchannel_ or _-12345_)',
-                            [
-                                'parse_mode'   => 'markdown',
-                                'reply_markup' => new Keyboard(
-                                    [
-                                        'keyboard'          => $keyboard,
-                                        'resize_keyboard'   => true,
-                                        'one_time_keyboard' => true,
-                                        'selective'         => true,
-                                    ]
-                                ),
-                            ]
-                        );
-                        break;
-                    }
-                    $notes['channel']         = $text;
-                    $notes['last_message_id'] = $message->getMessageId();
-
-                // no break
-                case 1:
-                    insert:
-                    if (($type === 'message' && $text === '') || $notes['last_message_id'] === $message->getMessageId()) {
-                        $notes['state'] = 1;
-                        $this->conversation->update();
-
-                        $result = $this->replyToChat(
-                            'Insert the content you want to share: text, photo, audio...',
-                            ['reply_markup' => Keyboard::remove(['selective' => true])]
-                        );
-                        break;
-                    }
-                    $notes['last_message_id'] = $message->getMessageId();
-                    $notes['message']         = $message->getRawData();
-                    $notes['message_type']    = $type;
-                // no break
-                case 2:
-                    if (!$text_yes_or_no || $notes['last_message_id'] === $message->getMessageId()) {
-                        $notes['state'] = 2;
-                        $this->conversation->update();
-
-                        // Grab any existing caption.
-                        if ($caption = $message->getCaption()) {
-                            $notes['caption'] = $caption;
-                            $text             = 'No';
-                        } elseif (in_array($notes['message_type'], ['video', 'photo'], true)) {
-                            $text = 'Would you like to insert a caption?';
-                            if (!$text_yes_or_no && $notes['last_message_id'] !== $message->getMessageId()) {
-                                $text .= PHP_EOL . 'Type Yes or No';
-                            }
-
-                            $result = $this->replyToChat(
-                                $text,
-                                ['reply_markup' => $yes_no_keyboard]
-                            );
-                            break;
+                    // Grab any existing caption.
+                    if ($caption = $message->getCaption()) {
+                        $notes['caption'] = $caption;
+                        $text             = 'No';
+                    } elseif (in_array($notes['message_type'], ['video', 'photo'], true)) {
+                        $text = 'Would you like to insert a caption?';
+                        if (!$text_yes_or_no && $notes['last_message_id'] !== $message->getMessageId()) {
+                            $text .= PHP_EOL . 'Type Yes or No';
                         }
-                    }
-                    $notes['set_caption']     = ($text === 'Yes');
-                    $notes['last_message_id'] = $message->getMessageId();
-                // no break
-                case 3:
-                    if ($notes['set_caption'] && ($notes['last_message_id'] === $message->getMessageId() || $type !== 'message')) {
-                        $notes['state'] = 3;
-                        $this->conversation->update();
 
                         $result = $this->replyToChat(
-                            'Insert caption:',
-                            ['reply_markup' => Keyboard::remove(['selective' => true])]
+                            $text,
+                            ['reply_markup' => $yes_no_keyboard]
                         );
                         break;
                     }
-                    $notes['last_message_id'] = $message->getMessageId();
-                    if (isset($notes['caption'])) {
-                        // If caption has already been send with the file, no need to ask for it.
-                        $notes['set_caption'] = true;
-                    } else {
-                        $notes['caption'] = $text;
-                    }
-                // no break
-                case 4:
-                    if (!$text_yes_or_no || $notes['last_message_id'] === $message->getMessageId()) {
-                        $notes['state'] = 4;
-                        $this->conversation->update();
+                }
+                $notes['set_caption']     = ($text === 'Yes');
+                $notes['last_message_id'] = $message->getMessageId();
+            // no break
+            case 3:
+                if ($notes['set_caption'] && ($notes['last_message_id'] === $message->getMessageId() || $type !== 'message')) {
+                    $notes['state'] = 3;
+                    $this->conversation->update();
 
-                        $result = $this->replyToChat('Message will look like this:');
+                    $result = $this->replyToChat(
+                        'Insert caption:',
+                        ['reply_markup' => Keyboard::remove(['selective' => true])]
+                    );
+                    break;
+                }
+                $notes['last_message_id'] = $message->getMessageId();
+                if (isset($notes['caption'])) {
+                    // If caption has already been send with the file, no need to ask for it.
+                    $notes['set_caption'] = true;
+                } else {
+                    $notes['caption'] = $text;
+                }
+            // no break
+            case 4:
+                if (!$text_yes_or_no || $notes['last_message_id'] === $message->getMessageId()) {
+                    $notes['state'] = 4;
+                    $this->conversation->update();
 
-                        if ($notes['message_type'] !== 'command') {
-                            if ($notes['set_caption']) {
-                                $data['caption'] = $notes['caption'];
-                            }
-                            $this->sendBack(new Message($notes['message'], $this->telegram->getBotUsername()), $data);
+                    $result = $this->replyToChat('Message will look like this:');
 
-                            $data['reply_markup'] = $yes_no_keyboard;
-
-                            $data['text'] = 'Would you like to post it?';
-                            if (!$text_yes_or_no && $notes['last_message_id'] !== $message->getMessageId()) {
-                                $data['text'] .= PHP_EOL . 'Type Yes or No';
-                            }
-                            $result = Request::sendMessage($data);
+                    if ($notes['message_type'] !== 'command') {
+                        if ($notes['set_caption']) {
+                            $data['caption'] = $notes['caption'];
                         }
-                        break;
+                        $this->sendBack(new Message($notes['message'], $this->telegram->getBotUsername()), $data);
+
+                        $data['reply_markup'] = $yes_no_keyboard;
+
+                        $data['text'] = 'Would you like to post it?';
+                        if (!$text_yes_or_no && $notes['last_message_id'] !== $message->getMessageId()) {
+                            $data['text'] .= PHP_EOL . 'Type Yes or No';
+                        }
+                        $result = Request::sendMessage($data);
                     }
+                    break;
+                }
 
-                    $notes['post_message']    = ($text === 'Yes');
-                    $notes['last_message_id'] = $message->getMessageId();
-                // no break
-                case 5:
-                    $data['reply_markup'] = Keyboard::remove(['selective' => true]);
+                $notes['post_message']    = ($text === 'Yes');
+                $notes['last_message_id'] = $message->getMessageId();
+            // no break
+            case 5:
+                $data['reply_markup'] = Keyboard::remove(['selective' => true]);
 
-                    if ($notes['post_message']) {
-                        $data['parse_mode'] = 'markdown';
-                        $data['text']       = $this->publish(
-                            new Message($notes['message'], $this->telegram->getBotUsername()),
-                            $notes['channel'],
-                            $notes['caption']
-                        );
-                    } else {
-                        $data['text'] = 'Aborted by user, message not sent..';
-                    }
+                if ($notes['post_message']) {
+                    $data['parse_mode'] = 'markdown';
+                    $data['text']       = $this->publish(
+                        new Message($notes['message'], $this->telegram->getBotUsername()),
+                        $notes['channel'],
+                        $notes['caption']
+                    );
+                } else {
+                    $data['text'] = 'Aborted by user, message not sent..';
+                }
 
-                    $this->conversation->stop();
-                    $result = Request::sendMessage($data);
-            }
-
-            return $result;
+                $this->conversation->stop();
+                $result = Request::sendMessage($data);
         }
 
-        /**
-         * SendBack
-         *
-         * Received a message, the bot can send a copy of it to another chat/channel.
-         * You don't have to care about the type of the message, the function detect it and use the proper
-         * REQUEST:: function to send it.
-         * $data include all the var that you need to send the message to the proper chat
-         *
-         * @todo This method will be moved to a higher level maybe in AdminCommand or Command
-         * @todo Looking for a more significant name
-         *
-         * @param Message $message
-         * @param array   $data
-         *
-         * @return ServerResponse
-         * @throws TelegramException
-         */
-        protected function sendBack(Message $message, array $data): ServerResponse
-        {
-            $type = $message->getType();
-            in_array($type, ['command', 'text'], true) && $type = 'message';
-
-            if ($type === 'message') {
-                $data['text'] = $message->getText(true);
-            } elseif ($type === 'audio') {
-                $data['audio']     = $message->getAudio()->getFileId();
-                $data['duration']  = $message->getAudio()->getDuration();
-                $data['performer'] = $message->getAudio()->getPerformer();
-                $data['title']     = $message->getAudio()->getTitle();
-            } elseif ($type === 'document') {
-                $data['document'] = $message->getDocument()->getFileId();
-            } elseif ($type === 'photo') {
-                $data['photo'] = $message->getPhoto()[0]->getFileId();
-            } elseif ($type === 'sticker') {
-                $data['sticker'] = $message->getSticker()->getFileId();
-            } elseif ($type === 'video') {
-                $data['video'] = $message->getVideo()->getFileId();
-            } elseif ($type === 'voice') {
-                $data['voice'] = $message->getVoice()->getFileId();
-            } elseif ($type === 'location') {
-                $data['latitude']  = $message->getLocation()->getLatitude();
-                $data['longitude'] = $message->getLocation()->getLongitude();
-            }
-
-            return Request::send('send' . ucfirst($type), $data);
-        }
-
-        /**
-         * Publish a message to a channel and return success or failure message in markdown format
-         *
-         * @param Message     $message
-         * @param string|int  $channel_id
-         * @param string|null $caption
-         *
-         * @return string
-         * @throws TelegramException
-         */
-        protected function publish(Message $message, $channel_id, $caption = null): string
-        {
-            $res = $this->sendBack($message, [
-                'chat_id' => $channel_id,
-                'caption' => $caption,
-            ]);
-
-            if ($res->isOk()) {
-                /** @var Chat $channel */
-                $channel          = $res->getResult()->getChat();
-                $escaped_username = $channel->getUsername() ? Entity::escapeMarkdown($channel->getUsername()) : '';
-
-                $response = sprintf(
-                    'Message successfully sent to *%s*%s',
-                    filter_var($channel->getTitle(), FILTER_SANITIZE_SPECIAL_CHARS),
-                    $escaped_username ? " (@{$escaped_username})" : ''
-                );
-            } else {
-                $escaped_username = Entity::escapeMarkdown($channel_id);
-                $response         = "Message not sent to *{$escaped_username}*" . PHP_EOL .
-                                    '- Does the channel exist?' . PHP_EOL .
-                                    '- Is the bot an admin of the channel?';
-            }
-
-            return $response;
-        }
-
-        /**
-         * Execute without db
-         *
-         * @todo Why send just to the first found channel?
-         *
-         * @return mixed
-         * @throws TelegramException
-         */
-        public function executeNoDb(): ServerResponse
-        {
-            $message = $this->getMessage();
-            $text    = trim($message->getText(true));
-
-            if ($text === '') {
-                return $this->replyToChat('Usage: ' . $this->getUsage());
-            }
-
-            $channels = array_filter((array) $this->getConfig('your_channel'));
-            if (empty($channels)) {
-                return $this->replyToChat('No channels defined in the command config!');
-            }
-
-            return $this->replyToChat($this->publish(
-                new Message($message->getRawData(), $this->telegram->getBotUsername()),
-                reset($channels)
-            ), ['parse_mode' => 'markdown']);
-        }
+        return $result;
     }
+
+    /**
+     * SendBack
+     *
+     * Received a message, the bot can send a copy of it to another chat/channel.
+     * You don't have to care about the type of the message, the function detect it and use the proper
+     * REQUEST:: function to send it.
+     * $data include all the var that you need to send the message to the proper chat
+     *
+     * @todo This method will be moved to a higher level maybe in AdminCommand or Command
+     * @todo Looking for a more significant name
+     *
+     * @param Message $message
+     * @param array   $data
+     *
+     * @return ServerResponse
+     * @throws TelegramException
+     */
+    protected function sendBack(Message $message, array $data): ServerResponse
+    {
+        $type = $message->getType();
+        in_array($type, ['command', 'text'], true) && $type = 'message';
+
+        if ($type === 'message') {
+            $data['text'] = $message->getText(true);
+        } elseif ($type === 'audio') {
+            $data['audio']     = $message->getAudio()->getFileId();
+            $data['duration']  = $message->getAudio()->getDuration();
+            $data['performer'] = $message->getAudio()->getPerformer();
+            $data['title']     = $message->getAudio()->getTitle();
+        } elseif ($type === 'document') {
+            $data['document'] = $message->getDocument()->getFileId();
+        } elseif ($type === 'photo') {
+            $data['photo'] = $message->getPhoto()[0]->getFileId();
+        } elseif ($type === 'sticker') {
+            $data['sticker'] = $message->getSticker()->getFileId();
+        } elseif ($type === 'video') {
+            $data['video'] = $message->getVideo()->getFileId();
+        } elseif ($type === 'voice') {
+            $data['voice'] = $message->getVoice()->getFileId();
+        } elseif ($type === 'location') {
+            $data['latitude']  = $message->getLocation()->getLatitude();
+            $data['longitude'] = $message->getLocation()->getLongitude();
+        }
+
+        return Request::send('send' . ucfirst($type), $data);
+    }
+
+    /**
+     * Publish a message to a channel and return success or failure message in markdown format
+     *
+     * @param Message     $message
+     * @param string|int  $channel_id
+     * @param string|null $caption
+     *
+     * @return string
+     * @throws TelegramException
+     */
+    protected function publish(Message $message, $channel_id, $caption = null): string
+    {
+        $res = $this->sendBack($message, [
+            'chat_id' => $channel_id,
+            'caption' => $caption,
+        ]);
+
+        if ($res->isOk()) {
+            /** @var Chat $channel */
+            $channel          = $res->getResult()->getChat();
+            $escaped_username = $channel->getUsername() ? Entity::escapeMarkdown($channel->getUsername()) : '';
+
+            $response = sprintf(
+                'Message successfully sent to *%s*%s',
+                filter_var($channel->getTitle(), FILTER_SANITIZE_SPECIAL_CHARS),
+                $escaped_username ? " (@{$escaped_username})" : ''
+            );
+        } else {
+            $escaped_username = Entity::escapeMarkdown($channel_id);
+            $response         = "Message not sent to *{$escaped_username}*" . PHP_EOL .
+                                '- Does the channel exist?' . PHP_EOL .
+                                '- Is the bot an admin of the channel?';
+        }
+
+        return $response;
+    }
+
+    /**
+     * Execute without db
+     *
+     * @todo Why send just to the first found channel?
+     *
+     * @return mixed
+     * @throws TelegramException
+     */
+    public function executeNoDb(): ServerResponse
+    {
+        $message = $this->getMessage();
+        $text    = trim($message->getText(true));
+
+        if ($text === '') {
+            return $this->replyToChat('Usage: ' . $this->getUsage());
+        }
+
+        $channels = array_filter((array) $this->getConfig('your_channel'));
+        if (empty($channels)) {
+            return $this->replyToChat('No channels defined in the command config!');
+        }
+
+        return $this->replyToChat($this->publish(
+            new Message($message->getRawData(), $this->telegram->getBotUsername()),
+            reset($channels)
+        ), ['parse_mode' => 'markdown']);
+    }
+}

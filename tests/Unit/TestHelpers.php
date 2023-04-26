@@ -1,19 +1,13 @@
 <?php
 
-    /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
-     */
+    namespace PHPBotts\Core\Tests\Unit;
 
-    namespace KSeven\TelegramBot\Tests\Unit;
-
-    use KSeven\TelegramBot\DB;
-    use KSeven\TelegramBot\Entities\Chat;
-    use KSeven\TelegramBot\Entities\Message;
-    use KSeven\TelegramBot\Entities\Update;
-    use KSeven\TelegramBot\Entities\User;
-    use KSeven\TelegramBot\Exception\TelegramException;
+    use PHPBotts\Core\DB;
+    use PHPBotts\Core\Entities\Chat;
+    use PHPBotts\Core\Entities\Message;
+    use PHPBotts\Core\Entities\Update;
+    use PHPBotts\Core\Entities\User;
+    use PHPBotts\Core\Exception\TelegramException;
 
     class TestHelpers
     {

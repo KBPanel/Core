@@ -1,24 +1,18 @@
 <?php
 
-    /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
-     */
+    namespace PHPBotts\Core\Tests\Unit\Entities;
 
-    namespace KSeven\TelegramBot\Tests\Unit\Entities;
-
-    use KSeven\TelegramBot\Entities\File;
-    use KSeven\TelegramBot\Entities\Message;
-    use KSeven\TelegramBot\Entities\PhotoSize;
-    use KSeven\TelegramBot\Entities\ServerResponse;
-    use KSeven\TelegramBot\Entities\Sticker;
-    use KSeven\TelegramBot\Entities\StickerSet;
-    use KSeven\TelegramBot\Entities\Update;
-    use KSeven\TelegramBot\Entities\UserProfilePhotos;
-    use KSeven\TelegramBot\Request;
-    use KSeven\TelegramBot\Tests\Unit\TestCase;
-    use KSeven\TelegramBot\Tests\Unit\TestHelpers;
+    use PHPBotts\Core\Entities\File;
+    use PHPBotts\Core\Entities\Message;
+    use PHPBotts\Core\Entities\PhotoSize;
+    use PHPBotts\Core\Entities\ServerResponse;
+    use PHPBotts\Core\Entities\Sticker;
+    use PHPBotts\Core\Entities\StickerSet;
+    use PHPBotts\Core\Entities\Update;
+    use PHPBotts\Core\Entities\UserProfilePhotos;
+    use PHPBotts\Core\Request;
+    use PHPBotts\Core\Tests\Unit\TestCase;
+    use PHPBotts\Core\Tests\Unit\TestHelpers;
 
     class ServerResponseTest extends TestCase
     {

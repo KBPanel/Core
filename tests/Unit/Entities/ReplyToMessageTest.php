@@ -6,10 +6,10 @@
      * file that was distributed with this source code.
      */
     
-    namespace KSeven\TelegramBot\Tests\Unit\Entities;
+    namespace PHPBotts\Core\Tests\Unit\Entities;
 
-    use KSeven\TelegramBot\Entities\Update;
-    use KSeven\TelegramBot\Tests\Unit\TestCase;
+    use PHPBotts\Core\Entities\Update;
+    use PHPBotts\Core\Tests\Unit\TestCase;
 
     class ReplyToMessageTest extends TestCase
     {

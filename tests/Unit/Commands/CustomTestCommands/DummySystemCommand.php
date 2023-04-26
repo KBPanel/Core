@@ -1,20 +1,14 @@
 <?php
 
     /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
-     */
-
-    /**
      * Test "/dummysystem" command
      */
 
     namespace Dummy\SystemCommands;
 
-    use KSeven\TelegramBot\Commands\SystemCommand;
-    use KSeven\TelegramBot\Entities\ServerResponse;
-    use KSeven\TelegramBot\Request;
+    use PHPBotts\Core\Commands\SystemCommand;
+    use PHPBotts\Core\Entities\ServerResponse;
+    use PHPBotts\Core\Request;
 
     class DummySystemCommand extends SystemCommand
     {

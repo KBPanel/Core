@@ -1,37 +1,31 @@
 <?php
 
+namespace Entities\TelegramPassport\PassportElementError;
+
+use PHPBotts\Core\Entities\Entity;
+
+/**
+ * Class PassportElementErrorUnspecified
+ *
+ * Represents an issue in an unspecified place. The error is considered resolved when new data is added.
+ *
+ * @link https://core.telegram.org/bots/api#passportelementerrorunspecified
+ *
+ * @method string getSource()      Error source, must be unspecified
+ * @method string getType()        Type of element of the user's Telegram Passport which has the issue
+ * @method string getElementHash() Base64-encoded element hash
+ * @method string getMessage()     Error message
+ */
+class PassportElementErrorUnspecified extends Entity implements PassportElementError
+{
     /**
-     * This file is part of the PHPBot Telegram package.
-     * For the full copyright and license information, please view the LICENSE
-     * file that was distributed with this source code.
+     * PassportElementErrorUnspecified constructor
+     *
+     * @param array $data
      */
-
-    namespace Entities\TelegramPassport\PassportElementError;
-
-    use KSeven\TelegramBot\Entities\Entity;
-
-    /**
-     * Class PassportElementErrorUnspecified
-     *
-     * Represents an issue in an unspecified place. The error is considered resolved when new data is added.
-     *
-     * @link https://core.telegram.org/bots/api#passportelementerrorunspecified
-     *
-     * @method string getSource()      Error source, must be unspecified
-     * @method string getType()        Type of element of the user's Telegram Passport which has the issue
-     * @method string getElementHash() Base64-encoded element hash
-     * @method string getMessage()     Error message
-     */
-    class PassportElementErrorUnspecified extends Entity implements PassportElementError
+    public function __construct(array $data = [])
     {
-        /**
-         * PassportElementErrorUnspecified constructor
-         *
-         * @param array $data
-         */
-        public function __construct(array $data = [])
-        {
-            $data['source'] = 'unspecified';
-            parent::__construct($data);
-        }
+        $data['source'] = 'unspecified';
+        parent::__construct($data);
     }
+}
